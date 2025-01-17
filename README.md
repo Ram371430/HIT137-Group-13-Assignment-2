@@ -4,26 +4,35 @@ The repository includes all programming files, outputs, and the required text fi
 
 import turtle
 
-# Set up the turtle
-t = turtle.Turtle()
-t.speed(0)
-t.left(90)  # Point the turtle upwards (towards the top of the screen)
-
-# Recursive function to draw tree branches
-def branch(length, t):
-    if length <= 5:  # Base case: stop when the branch is too small
+def draw_tree(branch_length, angle_left, angle_right, depth, reduction_factor):
+    if depth == 0:
         return
     else:
-        t.forward(length)  # Draw the current branch
-        t.right(20)  # Turn right to draw the right branch
-        branch(length - 15, t)  # Recursively draw the right subtree
-        t.left(40)  # Turn left to draw the left branch
-        branch(length - 15, t)  # Recursively draw the left subtree
-        t.right(20)  # Turn back to the original angle
-        t.backward(length)  # Move the turtle back to the original position
+        turtle.forward(branch_length)
+        turtle.left(angle_left)
+        draw_tree(branch_length * reduction_factor, angle_left, angle_right, depth - 1, reduction_factor)
+        turtle.right(angle_left + angle_right)
+        draw_tree(branch_length * reduction_factor, angle_left, angle_right, depth - 1, reduction_factor)
+        turtle.left(angle_right)
+        turtle.backward(branch_length)
 
-# Start drawing the tree
-branch(100, t)  # Start with an initial branch length of 100
+def main():
+    turtle.speed(0)
+    turtle.left(90)
+    turtle.penup()
+    turtle.backward(100)
+    turtle.pendown()
+    
+    # Set fixed values for the tree parameters
+    angle_left = 30
+    angle_right = 30
+    branch_length = 100
+    depth = 5
+    reduction_factor = 0.7
+    
+    draw_tree(branch_length, angle_left, angle_right, depth, reduction_factor)
+    turtle.hideturtle()
+    turtle.done()
 
-# Keep the window open
-turtle.mainloop()
+if __name__ == "__main__":
+    main()
